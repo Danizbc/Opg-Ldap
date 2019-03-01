@@ -20,6 +20,10 @@ namespace LDAP
 
         readonly string working = "Working";
 
+        string loginName = "";
+
+        string loginPassword = "";
+
         //Properties
         public bool TrueOrFalse
         {
@@ -39,6 +43,29 @@ namespace LDAP
             }
         }
 
+        public string LoginName
+        {
+            get { return loginName; }
+            set
+            {
+                loginName = value;
+            }
+        }
+
+        public string LoginPassword
+        {
+            get { return loginPassword; }
+            set
+            {
+                loginPassword = value;
+            }
+        }
+
+
+
+
+
+        //Methods
         public string LdapConnect()
         {
             
@@ -50,7 +77,7 @@ namespace LDAP
 
                 //mLdapConnetion is our connection to AD if there is no result comming out
                 ///Check for the right connection string
-                DirectoryEntry myLdapConnection = createDirectoryEntry();
+                DirectoryEntry myLdapConnection = createDirectoryEntry(LoginName, LoginPassword);
 
                 // create search object which operates on LDAP connection object  
                 // and set search object to only find the user specified  
@@ -97,18 +124,42 @@ namespace LDAP
 
             return working;
         }
+
+        public bool Loggin(string username, string password)
+        {
+            try
+            {
+                DirectoryEntry myLdapConnection = createDirectoryEntry(username, password);
+
+                DirectorySearcher search = new DirectorySearcher(myLdapConnection);
+                search.Filter = "(cn=" + username + ")";
+
+                // create results objects from search object  
+                SearchResult result = search.FindOne();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
+
         /// <summary>
         /// Connection for our AD
         /// </summary>
-        static DirectoryEntry createDirectoryEntry()
+        static DirectoryEntry createDirectoryEntry(string username, string password)
         {
-            // create and return new LDAP connection with desired settings  
+            // create and return new LDAP connection with desired settings
             ///We dont need a path? 
             ///Try the one below if it doesnt work
-            /// DirectoryEntry directoryEntry = new DirectoryEntry("LDAP://MMDA.DK"); 
-            DirectoryEntry ldapConnection = new DirectoryEntry("MILJØ.DK");
+            /// DirectoryEntry directoryEntry = new DirectoryEntry("LDAP://ip"); 
+            DirectoryEntry ldapConnection = new DirectoryEntry("LDAP://192.168.0.2");
             ///We only need a path if we want to be very specific in what OU we want to look for
-            ldapConnection.Path = "LDAP://OU=DomainUsers,DC=miljø,DC=dk"; ///We are searching for it in miljømærkering
+           // ldapConnection.Path = "LDAP://OU=DomainUsers,DC=192.168.0.2,DC=dk"; ///We are searching for it in miljømærkering
+            ldapConnection.Username = username;
+            ldapConnection.Password = password;
             ldapConnection.AuthenticationType = AuthenticationTypes.Secure; ///makes secure connetion?
 
             return ldapConnection;

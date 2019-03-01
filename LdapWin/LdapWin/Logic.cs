@@ -105,11 +105,12 @@ namespace LdapWin
             ///We dont need a path? 
             ///Try the one below if it doesnt work
             /// DirectoryEntry directoryEntry = new DirectoryEntry("LDAP://MMDA.DK"); 
-            DirectoryEntry ldapConnection = new DirectoryEntry("MILJØ.DK");
+            DirectoryEntry ldapConnection = new DirectoryEntry("LDAP://192.168.0.2");
             ///We only need a path if we want to be very specific in what OU we want to look for
-            ldapConnection.Path = "LDAP://OU=DomainUsers,DC=miljø,DC=dk"; ///We are searching for it in miljømærkering
+            //ldapConnection.Path = "LDAP://OU=DomainUsers,DC=miljø,DC=dk,"; ///We are searching for it in miljømærkering
             ldapConnection.AuthenticationType = AuthenticationTypes.Secure; ///makes secure connetion?
-
+            ldapConnection.Username = "administrator";
+            ldapConnection.Password = "Proh12019";
             return ldapConnection;
             ///return directoryEntry
         }

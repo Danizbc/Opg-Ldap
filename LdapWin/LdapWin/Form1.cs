@@ -37,12 +37,12 @@ namespace LdapWin
             if (firstname != null && lastname != null)
             {
                 firstname += (" " + lastname);
-                button1_Click(l.LdapConnect(firstname), e);
+               MessageBox.Show(l.LdapConnect(firstname));
 
-                var items = listView1.Items;
+              
                 foreach (var item in l.Information)
                 {
-                    items.Add(item);
+                    listView1.Items.Add(item);
                 }
             }
             else
@@ -66,15 +66,7 @@ namespace LdapWin
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selecteditems = listView1.SelectedItems;
-            if (selecteditems.Count > 0)
-            {
-                this.Text = selecteditems[0].Text;
-            }
-            else
-            {
-                this.Text = "empty";
-            }
+       
         }
     }
 }
